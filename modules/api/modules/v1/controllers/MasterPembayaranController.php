@@ -25,7 +25,7 @@ class MasterPembayaranController extends \app\modules\api\controllers\BaseContro
         $parent = parent::behaviors();
         $parent['authentication'] = [
             "class" => "\app\components\CustomAuth",
-            "except" => ["index", "view"]
+            "except" => ["index"]
         ];
 
         return $parent;
@@ -56,7 +56,7 @@ class MasterPembayaranController extends \app\modules\api\controllers\BaseContro
 
     public function actionIndexUser(){
         $model = $this->modelClass::find();
-        
+
     }
 
     public function actionCreate(){
