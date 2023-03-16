@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers\api\v1;
+namespace app\modules\api\modules\v1\controllers;
 
 /**
  * This is the class for REST controller "MasterMaterialController".

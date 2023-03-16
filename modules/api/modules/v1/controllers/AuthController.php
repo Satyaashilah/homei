@@ -228,22 +228,22 @@ class AuthController extends \yii\rest\ActiveController
 
     public function actionLogout()
     {
-
         $headers = Yii::$app->request->headers;
         $accept = $headers->get('Authorization');
-        $accept = str_replace('Bearer ', '', $accept);
-        $model = User::find()->where(['secret_token' => $accept])->one();
-        var_dump($model);
-        die;
-        if (!empty($model)) {
-            \Yii::$app->user->logout(false);
+        $model = User::find()->where(['secret_token'=>$accept])->one();
+        // var_dump($model);
+        if(!empty($model))
+        {
+            $model->secret_token = null;
+            $model->save();
+            // \Yii::$app->user->logout(false);
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
                 'success' => true,
                 'message' => 'Berhasil Logout',
-
+    
             ];
-        } else {
+        }else {
             return [
                 "success" => false,
                 "message" => "Gagal Logout"

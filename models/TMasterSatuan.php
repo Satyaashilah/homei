@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
  * This is the model class for table "t_master_satuan".
  * Modified by Defri Indra M
  */
-class MasterSatuan extends BaseMasterSatuan
+class TMasterSatuan extends BaseMasterSatuan
 {
     public function behaviors()
     {

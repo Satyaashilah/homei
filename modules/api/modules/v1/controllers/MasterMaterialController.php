@@ -1,6 +1,6 @@
 <?php
 
-namespace app\controllers\api\v1;
+namespace app\modules\api\modules\v1\controllers;
 
 /**
  * This is the class for REST controller "MasterMaterialController".
@@ -47,7 +47,7 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
     public function verbs()
     {
         return [
-            'index' => ['GET'],
+            // 'index' => ['GET'],
             'view' => ['GET'],
             'create' => ['POST'],
             'update' => ['PUT', 'PATCH'],
@@ -58,6 +58,7 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
     public function __construct($id, $module, $config = [])
     {
         parent::__construct($id, $module, $config);
+
         // $this->validation = new \app\validations\Validation();
     }
 
@@ -69,38 +70,38 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
 
     public function actionCreate()
     {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $model = new $this->modelClass;
-        $model->scenario = $model::SCENARIO_CREATE;
-        $model->attributes = \yii::$app->request->post();
-        if ($model->validate()) {
-            $model->save();
-            return array('status' => true, 'data' => 'Student record is successfully updated');
-        } else {
-            return array('status' => false, 'data' => $model->getErrors());
-        }
+        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         // $model = new $this->modelClass;
         // $model->scenario = $model::SCENARIO_CREATE;
+        // $model->attributes = \yii::$app->request->post();
+        // if ($model->validate()) {
+        //     $model->save();
+        //     return array('status' => true, 'data' => 'Student record is successfully updated');
+        // } else {
+        //     return array('status' => false, 'data' => $model->getErrors());
+        // }
+        $model = new $this->modelClass;
+        $model->scenario = $model::SCENARIO_CREATE;
         // var_dump($model);die;
 
-        // try {
-        //     if ($model->load(\Yii::$app->request->post(), '')) {
-        //         if ($model->validate()) {
-        //             $model->save();
+        try {
+            if ($model->load(\Yii::$app->request->post(), '')) {
+                if ($model->validate()) {
+                    $model->save();
 
-        //             return [
-        //                 "success" => true,
-        //                 "message" => $this->messageCreateSuccess(),
-        //             ];
-        //         }
+                    return [
+                        "success" => true,
+                        "message" => $this->messageCreateSuccess(),
+                    ];
+                }
 
-        //         throw new \yii\web\HttpException(422, $this->message422(\app\components\Constant::flattenError($model->getErrors())));
-        //     }
-        //     throw new \yii\web\HttpException(400, $this->message400());
-        // } catch (\Throwable $th) {
-        //     if(YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
-        //     else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
-        // }
+                throw new \yii\web\HttpException(422, $this->message422(\app\components\Constant::flattenError($model->getErrors())));
+            }
+            throw new \yii\web\HttpException(400, $this->message400());
+        } catch (\Throwable $th) {
+            if(YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
+            else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
+        }
     }
 
     public function actionUpdate($id)
