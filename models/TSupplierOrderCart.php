@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use \app\models\base\SupplierOrderCart as BaseSupplierOrderCart;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "t_supplier_order_cart".
@@ -31,15 +33,16 @@ use Yii;
  *
  * @property User $createdBy
  * @property User $deletedBy
- * @property TSupplierMaterial $material
- * @property TSupplierSubmaterial $submaterial
- * @property TSupplier $supplier
- * @property TSupplierBarang $supplierBarang
+ * @property SupplierMaterial $material
+ * @property SupplierSubmaterial $submaterial
+ * @property Supplier $supplier
+ * @property SupplierBarang $supplierBarang
  * @property User $updatedBy
  * @property User $user
  */
 class TSupplierOrderCart extends \yii\db\ActiveRecord
 {
+    const SCENARIO_CREATE='create';
     /**
      * {@inheritdoc}
      */
@@ -62,14 +65,20 @@ class TSupplierOrderCart extends \yii\db\ActiveRecord
             [['kode_unik'], 'string', 'max' => 50],
             [['no_spk'], 'string', 'max' => 100],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['supplier_barang_id'], 'exist', 'skipOnError' => true, 'targetClass' => TSupplierBarang::class, 'targetAttribute' => ['supplier_barang_id' => 'id']],
-            [['material_id'], 'exist', 'skipOnError' => true, 'targetClass' => TSupplierMaterial::class, 'targetAttribute' => ['material_id' => 'id']],
-            [['submaterial_id'], 'exist', 'skipOnError' => true, 'targetClass' => TSupplierSubmaterial::class, 'targetAttribute' => ['submaterial_id' => 'id']],
+            [['supplier_barang_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupplierBarang::class, 'targetAttribute' => ['supplier_barang_id' => 'id']],
+            [['material_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupplierMaterial::class, 'targetAttribute' => ['material_id' => 'id']],
+            [['submaterial_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupplierSubmaterial::class, 'targetAttribute' => ['submaterial_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updated_by' => 'id']],
             [['deleted_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['deleted_by' => 'id']],
-            [['supplier_id'], 'exist', 'skipOnError' => true, 'targetClass' => TSupplier::class, 'targetAttribute' => ['supplier_id' => 'id']],
+            [['supplier_id'], 'exist', 'skipOnError' => true, 'targetClass' => Supplier::class, 'targetAttribute' => ['supplier_id' => 'id']],
         ];
+    }
+
+    public function scenarios(){
+        $scenarios = parent::scenarios();
+        $scenarios ['create'] = ['user_id', 'jumlah', 'material_id'];
+        return $scenarios;
     }
 
     /**
@@ -129,7 +138,7 @@ class TSupplierOrderCart extends \yii\db\ActiveRecord
      */
     public function getMaterial()
     {
-        return $this->hasOne(TSupplierMaterial::class, ['id' => 'material_id']);
+        return $this->hasOne(SupplierMaterial::class, ['id' => 'material_id']);
     }
 
     /**
@@ -139,7 +148,7 @@ class TSupplierOrderCart extends \yii\db\ActiveRecord
      */
     public function getSubmaterial()
     {
-        return $this->hasOne(TSupplierSubmaterial::class, ['id' => 'submaterial_id']);
+        return $this->hasOne(SupplierSubmaterial::class, ['id' => 'submaterial_id']);
     }
 
     /**
@@ -149,7 +158,7 @@ class TSupplierOrderCart extends \yii\db\ActiveRecord
      */
     public function getSupplier()
     {
-        return $this->hasOne(TSupplier::class, ['id' => 'supplier_id']);
+        return $this->hasOne(Supplier::class, ['id' => 'supplier_id']);
     }
 
     /**
@@ -159,7 +168,7 @@ class TSupplierOrderCart extends \yii\db\ActiveRecord
      */
     public function getSupplierBarang()
     {
-        return $this->hasOne(TSupplierBarang::class, ['id' => 'supplier_barang_id']);
+        return $this->hasOne(SupplierBarang::class, ['id' => 'supplier_barang_id']);
     }
 
     /**

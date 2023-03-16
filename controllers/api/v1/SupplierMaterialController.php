@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\api\modules\v1\controllers;
+namespace app\controllers\api\v1;
 
 /**
- * This is the class for REST controller "SupplierOrderCartController".
+ * This is the class for REST controller "SupplierMaterialController".
  * Modified by Defri Indra
  */
 
@@ -11,10 +11,10 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use Yii;
 
-class SupplierOrderCartController extends \app\modules\api\controllers\BaseController
+class SupplierMaterialController extends \app\modules\api\controllers\BaseController
 {
     use \app\traits\MessageTrait;
-    public $modelClass = 'app\models\TSupplierOrderCart';
+    public $modelClass = 'app\models\SupplierMaterial';
     public $validation = null;
 
     /**
