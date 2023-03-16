@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\api\modules\v1\controllers;
+namespace app\controllers\api\v1;
 
 /**
- * This is the class for REST controller "MasterPembayaranController".
+ * This is the class for REST controller "UserController".
  * Modified by Defri Indra
  */
 
@@ -11,10 +11,10 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use Yii;
 
-class MasterPembayaranController extends \app\modules\api\controllers\BaseController
+class UserController extends \app\modules\api\controllers\BaseController
 {
     use \app\traits\MessageTrait;
-    public $modelClass = 'app\models\MasterPembayaran';
+    public $modelClass = 'app\models\User';
     public $validation = null;
 
     /**
@@ -50,13 +50,7 @@ class MasterPembayaranController extends \app\modules\api\controllers\BaseContro
 
     public function actionIndex(){
         $query = $this->modelClass::find();
-        // var_dump($query);die;
         return $this->dataProvider($query);
-    }
-
-    public function actionIndexUser(){
-        $model = $this->modelClass::find();
-        
     }
 
     public function actionCreate(){

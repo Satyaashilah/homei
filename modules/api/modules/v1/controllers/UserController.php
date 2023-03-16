@@ -3,7 +3,7 @@
 namespace app\modules\api\modules\v1\controllers;
 
 /**
- * This is the class for REST controller "SmarthomeMasterProdukController".
+ * This is the class for REST controller "UserController".
  * Modified by Defri Indra
  */
 
@@ -11,15 +11,15 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use Yii;
 
-class SmarthomeMasterProdukController extends \app\modules\api\controllers\BaseController
+class UserController extends \app\modules\api\controllers\BaseController
 {
     use \app\traits\MessageTrait;
-    public $modelClass = 'app\models\SmarthomeMasterProduk';
+    public $modelClass = 'app\models\User';
     public $validation = null;
 
     /**
-    * @inheritdoc
-    */
+     * @inheritdoc
+     */
     public function behaviors()
     {
         $parent = parent::behaviors();
@@ -48,19 +48,19 @@ class SmarthomeMasterProdukController extends \app\modules\api\controllers\BaseC
         // $this->validation = new \app\validations\Validation();
     }
 
-    public function actionIndex(){
+    public function actionIndex()
+    {
         $query = $this->modelClass::find();
         return $this->dataProvider($query);
     }
 
-    public function actionCreate(){
+    public function actionCreate()
+    {
         $model = new $this->modelClass;
         $model->scenario = $model::SCENARIO_CREATE;
 
         try {
             if ($model->load(\Yii::$app->request->post(), '')) {
-                $model->digunakan = 0;
-                $model->reset = 0;
                 if ($model->validate()) {
                     $model->save();
 
@@ -74,18 +74,22 @@ class SmarthomeMasterProdukController extends \app\modules\api\controllers\BaseC
             }
             throw new \yii\web\HttpException(400, $this->message400());
         } catch (\Throwable $th) {
-            if(YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
+            if (YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
             else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
         }
     }
 
-    public function actionUpdate($id){
+    public function actionUpdate($id)
+    {
         $model = $this->findModel($id);
         $model->scenario = $model::SCENARIO_UPDATE;
 
         try {
             if ($model->load(\Yii::$app->request->post(), '')) {
                 if ($model->validate()) {
+                    $model->password = \Yii::$app->security->generatePasswordHash($model->password);
+                    $generate_random_string = (new \app\helpers\SsoTokenHelper)->generateToken();
+                    $model->secret_token = $generate_random_string;
                     $model->save();
 
                     return [
@@ -94,21 +98,24 @@ class SmarthomeMasterProdukController extends \app\modules\api\controllers\BaseC
                     ];
                 }
 
-                throw new \yii\web\HttpException(422, $this->message422(
-                    \app\components\Constant::flattenError(
-                        $model->getErrors()
+                throw new \yii\web\HttpException(
+                    422,
+                    $this->message422(
+                        \app\components\Constant::flattenError(
+                            $model->getErrors()
                         )
                     )
                 );
             }
             throw new \yii\web\HttpException(400, $this->message400());
         } catch (\Throwable $th) {
-            if(YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
+            if (YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
             else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
         }
     }
 
-    public function actionDelete($id){
+    public function actionDelete($id)
+    {
         $model = $this->findModel($id);
 
         try {
@@ -118,7 +125,7 @@ class SmarthomeMasterProdukController extends \app\modules\api\controllers\BaseC
                 "message" => $this->messageDeleteSuccess()
             ];
         } catch (\Throwable $th) {
-            if(YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
+            if (YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
             else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
         }
     }

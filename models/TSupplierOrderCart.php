@@ -43,6 +43,7 @@ use yii\helpers\ArrayHelper;
 class TSupplierOrderCart extends \yii\db\ActiveRecord
 {
     const SCENARIO_CREATE='create';
+    const SCENARIO_UPDATE='update';
     /**
      * {@inheritdoc}
      */
@@ -78,6 +79,7 @@ class TSupplierOrderCart extends \yii\db\ActiveRecord
     public function scenarios(){
         $scenarios = parent::scenarios();
         $scenarios ['create'] = ['user_id', 'jumlah', 'material_id'];
+        $scenarios ['update'] = ['user_id', 'jumlah', 'material_id'];
         return $scenarios;
     }
 
