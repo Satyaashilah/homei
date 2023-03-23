@@ -3,5 +3,6 @@
         "activityBar.background": "#1B3320",
         "titleBar.activeBackground": "#26472C",
         "titleBar.activeForeground": "#F9FCFA"
-    }
+    },
+    "javascript.validate.enable": false
 }
