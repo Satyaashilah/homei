@@ -1,12 +1,13 @@
 <template>
-  <NavbarAuth />
-
+  <!-- <Navbar /> -->
+  <ProductDetail2 />
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import NavbarAuth from '../components/NavbarAuth.vue'
-import CatalogueList from '../components/CatalogueList.vue';
+import Navbar from '../components/Navbar.vue'
+// import Navbar from '../components/Navbar.vue';
+import ProductDetail2 from '../components/ProductDetail2.vue';
 </script>
 
 <style scoped></style>

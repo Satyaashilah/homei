@@ -1,25 +1,29 @@
 <template>
-  <Navbar />
-  <CatalogueList :products="products"/>
+    <div class="bg-white">
+      <div class="mx-auto max-w-2xl py-16 px-4 mb-10 sm:py-2 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 class="sr-only">Products</h2>
+
+        <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 ">
+          <a v-for="product in products" :key="product.id" :href="product.href" class="group hover:bg-neutral-50">
+            <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
+              <img :src="product.imageSrc" :alt="product.imageAlt"
+                class="h-full w-full object-cover object-center group-hover:opacity-75" />
+            </div>
+            <h3 class="mt-4 text-sm text-center text-gray-700">{{ product.nama }}</h3>
+            <p class="mt-1 text-lg text-center font-medium text-gray-900">{{ product.price }}</p>
+          </a>
+        </div>
+      </div>
+    </div>
 </template>
-  
+
 <script setup>
-import { ref, onMounted } from 'vue'
-import Navbar from '../components/Navbar.vue'
-import CatalogueList from '../components/CatalogueList.vue';
-import { Dialog, DialogPanel } from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-import ProductServices from '../services/ProductServices'
 import { RouterView, RouterLink } from 'vue-router'
 
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Cart', href: '/Cart' },
-  { name: 'Catalogue', href: '/Catalogue' },
-  { name: 'ProductDetail', href: '/ProductDetail' },
-]
+defineProps({
+  products: Array,
+})
 
-const mobileMenuOpen = ref(false)
 
 // const products = ref([
 //   {
@@ -57,21 +61,11 @@ const mobileMenuOpen = ref(false)
 //   // More products...
 // ]);
 
-const products = ref([]);
 
-
-function getProduct() {
-  var productservices = new ProductServices()
-  productservices.getProduct().then(response => {
-    const responseBody = response.data;
-    products.value = responseBody.data;
-  })
-}
-
-onMounted(() => {
-  getProduct()
-})
+  const navigation = [
+    // { name: 'Home', href: '/' },
+    // { name: 'Cart', href: '/Cart' },
+    // { name: 'Catalogue', href: '/Catalogue' },
+    { name: 'ProductDetail', href: '/ProductDetail' },
+  ]
 </script>
-  
-<style scoped></style>
-  

@@ -43,7 +43,7 @@ class AuthController extends \yii\rest\ActiveController
             'authentication' => [
                 'class' => \app\components\CustomAuth::class,
                 'except' => ['login', 'register'],
-            ]
+            ],
         ], $behaviors);
 
         return $behaviors;

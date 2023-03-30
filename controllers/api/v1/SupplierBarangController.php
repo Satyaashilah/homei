@@ -1,39 +1,25 @@
 <?php
 
-namespace app\modules\api\modules\v1\controllers;
+namespace app\controllers\api\v1;
 
 /**
- * This is the class for REST controller "MasterMaterialController".
+ * This is the class for REST controller "SupplierBarangController".
  * Modified by Defri Indra
- */
-
-/**
- * This is the model class for table "t_master_material".
- *
- * @property int $id
- * @property string $nama
- * @property string $deskripsi
- * @property int $id_satuan
- * @property int $flag
- *
- * @property MasterSatuan $satuan
- * @property HargaMaterial[] $HargaMaterials
  */
 
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use Yii;
 
-class MasterMaterialController extends \app\modules\api\controllers\BaseController
+class SupplierBarangController extends \app\modules\api\controllers\BaseController
 {
     use \app\traits\MessageTrait;
-    public $modelClass = 'app\models\MasterMaterial';
-    
+    public $modelClass = 'app\models\SupplierBarang';
     public $validation = null;
 
     /**
-     * @inheritdoc
-     */
+    * @inheritdoc
+    */
     public function behaviors()
     {
         $parent = parent::behaviors();
@@ -48,7 +34,7 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
     public function verbs()
     {
         return [
-            // 'index' => ['GET'],
+            'index' => ['GET'],
             'view' => ['GET'],
             'create' => ['POST'],
             'update' => ['PUT', 'PATCH'],
@@ -59,32 +45,17 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
     public function __construct($id, $module, $config = [])
     {
         parent::__construct($id, $module, $config);
-
         // $this->validation = new \app\validations\Validation();
     }
 
-    public function actionIndex()
-    {
+    public function actionIndex(){
         $query = $this->modelClass::find();
-        // var_dump($query);die;
         return $this->dataProvider($query);
     }
 
-    public function actionCreate()
-    {
-        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        // $model = new $this->modelClass;
-        // $model->scenario = $model::SCENARIO_CREATE;
-        // $model->attributes = \yii::$app->request->post();
-        // if ($model->validate()) {
-        //     $model->save();
-        //     return array('status' => true, 'data' => 'Student record is successfully updated');
-        // } else {
-        //     return array('status' => false, 'data' => $model->getErrors());
-        // }
+    public function actionCreate(){
         $model = new $this->modelClass;
         $model->scenario = $model::SCENARIO_CREATE;
-        // var_dump($model);die;
 
         try {
             if ($model->load(\Yii::$app->request->post(), '')) {
@@ -106,8 +77,7 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
         }
     }
 
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id){
         $model = $this->findModel($id);
         $model->scenario = $model::SCENARIO_UPDATE;
 
@@ -122,24 +92,21 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
                     ];
                 }
 
-                throw new \yii\web\HttpException(
-                    422,
-                    $this->message422(
-                        \app\components\Constant::flattenError(
-                            $model->getErrors()
+                throw new \yii\web\HttpException(422, $this->message422(
+                    \app\components\Constant::flattenError(
+                        $model->getErrors()
                         )
                     )
                 );
             }
             throw new \yii\web\HttpException(400, $this->message400());
         } catch (\Throwable $th) {
-            if (YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
+            if(YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
             else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
         }
     }
 
-    public function actionDelete($id)
-    {
+    public function actionDelete($id){
         $model = $this->findModel($id);
 
         try {
@@ -149,7 +116,7 @@ class MasterMaterialController extends \app\modules\api\controllers\BaseControll
                 "message" => $this->messageDeleteSuccess()
             ];
         } catch (\Throwable $th) {
-            if (YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
+            if(YII_DEBUG) throw new \yii\web\HttpException($th->statusCode ?? 500, $th->getMessage());
             else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
         }
     }

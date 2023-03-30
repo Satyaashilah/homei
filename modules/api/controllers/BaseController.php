@@ -27,7 +27,21 @@ class BaseController extends \yii\rest\Controller
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+        
         return array_merge([
+            'corsFilter'  => [
+                'class' => \yii\filters\Cors::className(),
+                'cors'  => [
+                    'Origin'                           => [
+                        'localhost',
+                        'localhost:5173',
+                        'http://localhost:5173',
+                    ],
+                    'Access-Control-Request-Method'    => ['POST'],
+                    'Access-Control-Allow-Credentials' => true,
+                    'Access-Control-Max-Age'           => 3600,                 // Cache (seconds)
+                ],
+            ],
             'contentNegotiator' => [
                 'class' => ContentNegotiator::className(),
                 'formats' => [
