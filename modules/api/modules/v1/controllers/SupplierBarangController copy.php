@@ -10,16 +10,18 @@ namespace app\modules\api\modules\v1\controllers;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
-use yii\debug\models\timeline\DataProvider;
 
 class SupplierBarangController extends \app\modules\api\controllers\BaseController
 {
     use \app\traits\MessageTrait;
     public $modelClass = 'app\models\SupplierBarang';
     public $validation = null;
-    
+    public $serializer = [
+        'class' => 'yii\rest\Serializer',
+        'collectionEnvelope' => 'items',
+    ];
+
     /**
      * @inheritdoc
      */
@@ -54,7 +56,48 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
     public function actionIndex()
     {
         $data = \app\models\SupplierBarang::find();
-        return $this->dataProvider($data, $_GET['per-page']);
+        $count = $data->count();
+        $pages= new Pagination([
+            "totalCount" => $count
+        ]);
+        $pages->pageSize=12;
+        $result=$data->offset($pages->offset)->limit($pages->limit)->all();
+        $name = \Yii::$app->request->get('name');
+        $field = \Yii::$app->request->get('field');
+
+        if ($field) {
+            $allowed_field = array_filter($field, function ($item) {
+                $excludes = ['latitude', 'longitude', 'created_at', 'deleted_at', 'created_by', 'updated_at', 'updated_by', 'deleted_by'];
+                if (in_array($item, $excludes)) {
+                    return false;
+                }
+                return true;
+            });
+            $data = $data->select($allowed_field);
+        } else {
+            $data_columns = \Yii::$app->db->createCommand('SELECT COLUMN_NAME FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`="db_homei" and `TABLE_NAME`="t_supplier_barang" and COLUMN_NAME not in ("latitude","longitude", "created_at", "deleted_at", "created_by", "updated_at", "updated_by", "deleted_by")')->queryAll();
+            $includes = [];
+            foreach ($data_columns as $item) {
+                $includes[] = $item['COLUMN_NAME'];
+            }
+            $data = $data->select($includes);
+        }
+        $result = $data->all();
+
+        if (count($result) == 0) {
+            return [
+                "success" => false,
+                "message" => "Data not found : name -> $name"
+            ];
+        }
+
+        // if($result == null) {
+        //     return [
+        //         "success" => false,
+        //         "message" => "Data not found : name -> $name"
+        //     ];
+        // }
+        return $result;
     }
 
     public function actionCreate()

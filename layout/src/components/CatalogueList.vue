@@ -170,7 +170,7 @@
             <div class="lg:col-span-3">
               <Catalogue :products="products" />
               <!-- Your content -->
-              <Pagination />
+              <!-- <Pagination /> -->
             </div>
           </div>
         </section>

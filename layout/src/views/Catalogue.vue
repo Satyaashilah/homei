@@ -1,6 +1,8 @@
 <template>
+  <!-- <Loader :loading="showLoader" /> -->
   <Navbar />
   <CatalogueList :products="products"/>
+  <Pagination :meta="_meta" @changePage="changePage" />
 </template>
   
 <script setup>
@@ -10,6 +12,7 @@ import CatalogueList from '../components/CatalogueList.vue';
 import { Dialog, DialogPanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import ProductServices from '../services/ProductServices'
+import Pagination from '../components/Pagination.vue'
 import { RouterView, RouterLink } from 'vue-router'
 
 const navigation = [
@@ -21,55 +24,27 @@ const navigation = [
 
 const mobileMenuOpen = ref(false)
 
-// const products = ref([
-//   {
-//     id: 1,
-//     name: 'Earthen Bottle',
-//     href: '/ProductDetail',
-//     price: '$48',
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg',
-//     imageAlt: 'Tall slender porcelain bottle with natural clay textured body and cork stopper.',
-//   },
-//   {
-//     id: 2,
-//     name: 'Nomad Tumbler',
-//     href: '/ProductDetail',
-//     price: '$35',
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
-//     imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
-//   },
-//   {
-//     id: 3,
-//     name: 'Focus Paper Refill',
-//     href: '/ProductDetail',
-//     price: '$89',
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg',
-//     imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
-//   },
-//   {
-//     id: 4,
-//     name: 'Machined Mechanical Pencil',
-//     href: '/ProductDetail',
-//     price: '$35',
-//     imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
-//     imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
-//   },
-//   // More products...
-// ]);
-
 const products = ref([]);
+const _meta = ref({});
 
 
-function getProduct() {
+function getProduct(page) {
   var productservices = new ProductServices()
-  productservices.getProduct().then(response => {
+  productservices.getProduct(page).then(response => {
     const responseBody = response.data;
     products.value = responseBody.data;
+
+    _meta.value = responseBody._meta;
   })
 }
 
+function changePage(page)  {
+  getProduct(page);
+}
+
 onMounted(() => {
-  getProduct()
+  // ketika baru dibuka pagenya 1
+  getProduct(1)
 })
 </script>
   
