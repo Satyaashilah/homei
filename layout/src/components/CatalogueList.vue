@@ -71,7 +71,8 @@
           <h1 class="text-4xl font-bold mt-2 tracking-tight text-gray-700">Pilih Bahan Material</h1>
           <div class="flex items-center">
 
-            <Menu as="div" class="relative inline-block text-left">
+            <!-- SORTIR -->
+            <!-- <Menu as="div" class="relative inline-block text-left">
 
               <div>
                 <MenuButton
@@ -98,7 +99,7 @@
                 </MenuItems>
               </transition>
 
-            </Menu>
+            </Menu> -->
 
 
             <button type="button" class="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
@@ -121,10 +122,10 @@
               <form>
                 <div class="flex">
                   <div class=" relative w-full">
-                    <input type="search" id="search-dropdown"
+                    <input v-model="search" type="search" id="search-dropdown"
                       class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-0 rounded-r-sm border-b border-gray-200 focus:ring-gray-100 focus:border-gray-100 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-gray-500"
                       placeholder="Search Material..." required>
-                    <button type="submit"
+                    <button type="button" @click="$emit('namaBarang', search)"
                       class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-gray-700 rounded-r-sm border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
                       <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -154,8 +155,8 @@
                 <DisclosurePanel class="pt-6">
                   <div class="space-y-4">
                     <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
-                      <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value"
-                        type="checkbox" :checked="option.checked"
+                      <input @change="$emit('selectMaterial', materials)" :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value"
+                        type="checkbox" :checked="option.checked" v-model="materials"
                         class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                       <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">{{ option.label
                       }}</label>
@@ -204,56 +205,29 @@ defineProps({
 })
 
 const sortOptions = [
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
+  { name: 'Price: Low to High', href: '#', value: '1', current: false },
+  { name: 'Price: High to Low', href: '#', value: '2', current: false },
 ]
-// const subCategories = [
-//   { name: 'Totes', href: '#' },
-//   { name: 'Backpacks', href: '#' },
-//   { name: 'Travel Bags', href: '#' },
-//   { name: 'Hip Bags', href: '#' },
-//   { name: 'Laptop Sleeves', href: '#' },
-// ]
+const sort = ref([]);
+const materials = ref([]);
+const search = ref(null);
 const filters = [
   {
     id: 'material',
     name: 'Pilih Material',
     options: [
-      { value: 'besi', label: 'Besi', checked: false },
-      { value: 'bajaringan', label: 'Baja Ringan', checked: false },
-      { value: 'cat', label: 'Cat', checked: true },
-      { value: 'genting', label: 'Genting', checked: false },
-      { value: 'plafonatap', label: 'Plafon Atap', checked: false },
-      { value: 'keramik', label: 'Keramik', checked: false },
-      { value: 'bajaringan', label: 'Baja Ringan', checked: false },
-      { value: 'semen', label: 'Semen', checked: false },
-      { value: 'pasir', label: 'Pasir', checked: false },
-      { value: 'batucoral', label: 'Batu Coral', checked: false },
+      { value: '1', label: 'Besi', checked: false },
+      { value: '2', label: 'Baja Ringan', checked: false },
+      { value: '3', label: 'Cat', checked: false },
+      { value: '4', label: 'Genting', checked: false },
+      { value: '5', label: 'Plafon Atap', checked: false },
+      { value: '6', label: 'Keramik', checked: false },
+      { value: '7', label: 'Baja Ringan', checked: false },
+      { value: '8', label: 'Semen', checked: false },
+      { value: '9', label: 'Pasir', checked: false },
+      { value: '10', label: 'Batu Coral', checked: false },
     ],
   },
-  // {
-  //   id: 'category',
-  //   name: 'Category',
-  //   options: [
-  //     { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-  //     { value: 'sale', label: 'Sale', checked: false },
-  //     { value: 'travel', label: 'Travel', checked: true },
-  //     { value: 'organization', label: 'Organization', checked: false },
-  //     { value: 'accessories', label: 'Accessories', checked: false },
-  //   ],
-  // },
-  // {
-  //   id: 'size',
-  //   name: 'Size',
-  //   options: [
-  //     { value: '2l', label: '2L', checked: false },
-  //     { value: '6l', label: '6L', checked: false },
-  //     { value: '12l', label: '12L', checked: false },
-  //     { value: '18l', label: '18L', checked: false },
-  //     { value: '20l', label: '20L', checked: false },
-  //     { value: '40l', label: '40L', checked: true },
-  //   ],
-  // },
 ]
 
 const mobileFiltersOpen = ref(false)

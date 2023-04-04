@@ -1,7 +1,7 @@
 <template>
   <!-- <Loader :loading="showLoader" /> -->
   <Navbar />
-  <CatalogueList :products="products"/>
+  <CatalogueList :products="products" @selectMaterial="_selectMaterial" @namaBarang="search"/>
   <Pagination :meta="_meta" @changePage="changePage" />
 </template>
   
@@ -27,10 +27,11 @@ const mobileMenuOpen = ref(false)
 const products = ref([]);
 const _meta = ref({});
 
+const materialId = ref(null);
 
-function getProduct(page) {
+function getProduct(params) {
   var productservices = new ProductServices()
-  productservices.getProduct(page).then(response => {
+  productservices.getProducts(params).then(response => {
     const responseBody = response.data;
     products.value = responseBody.data;
 
@@ -39,12 +40,27 @@ function getProduct(page) {
 }
 
 function changePage(page)  {
-  getProduct(page);
+
+  var params = {page: page};
+  if (materialId.value != null) {
+    params[material_id] = materialId.value
+    
+  }if (s)
+  getProduct(params);
+}
+
+function _selectMaterial(materials) {
+  getProduct({page: _meta.value.currentPage, material_id: materials})
+}
+
+function search(nama_barang){
+  // console.log(event);
+  getProduct({page: _meta.value.currentPage, nama_barang: nama_barang})
 }
 
 onMounted(() => {
   // ketika baru dibuka pagenya 1
-  getProduct(1)
+  getProduct({page: 1})
 })
 </script>
   

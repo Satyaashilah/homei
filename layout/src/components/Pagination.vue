@@ -8,18 +8,11 @@
         <div>
           <p class="text-sm text-gray-700">
             Showing
+            {{ meta.perPage }}
+            items
+            | total
             {{ meta.totalCount }}
-            <span class="font-medium">1</span>
-            {{ ' ' }}
-            to
-            {{ ' ' }}
-            <span class="font-medium">20</span>
-            {{ ' ' }}
-            of
-            {{ ' ' }}
-            <span class="font-medium">97</span>
-            {{ ' ' }}
-            results
+            items
           </p>
         </div>
         <div>

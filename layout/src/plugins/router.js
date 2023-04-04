@@ -3,6 +3,7 @@ import Home from './../views/Home.vue';
 import Cart from './../views/Cart.vue';
 import Catalogue from './../views/Catalogue.vue';
 import ProductDetail from './../views/ProductDetail.vue';
+import Payment from '../components/Payment.vue';
 
 const routes = [
     {
@@ -14,6 +15,11 @@ const routes = [
         path: '/cart',
         name: 'Cart',
         component: () => import('./../views/Cart.vue')
+    },
+    {
+        path: '/payment',
+        name: 'Payment',
+        component: () => import('./../views/Payment.vue')
     },
     {
         path: '/catalogue',
