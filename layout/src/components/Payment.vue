@@ -1,7 +1,7 @@
 <template>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <div class="bg-gray-50 pt-20 mt-20 mb-20 mx-auto px-8 ">
+    <div class="bg-gray-50 pt-20 mt-20 mb-auto mx-auto px-8 ">
         <div class="grid grid-cols-2 gap-7">
             <h4> Informasi Pengiriman</h4>
             <h4> Pesanan</h4>
@@ -51,7 +51,7 @@
                         <div class="pt-1 shadow-sm">
                             <select class="form-select">
                                 <option selected disabled value="">Desa...</option>
-                                <option>{{ desa.nama }}</option>
+                                <option>..</option>
                             </select>
                         </div>
                     </div>
@@ -70,42 +70,143 @@
                         </div>
                     </div>
                 </div>
+                <div class="grid grid-cols-2 gap-4 pt-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                        <label class="form-check-label" for="flexCheckDefault">Shipping address is the same as my billing
+                            address</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                        <label class="form-check-label" for="flexCheckDefault">Save this information for next time</label>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Order Summary -->
-            <div class="bg-white w-full h-full rounded border border-neutral shadow-md ">
-                <div class="grid grid-cols-3 pt-3">
-                    <div>
-                        <div class="box-border h-32 w-32 p-4 border-1 rounded mt-10 ml-10">
-                            <img src="./../assets/homei.png" alt="Avatar Tailwind CSS Component" />
-                        </div>
-                    </div>
-                    <div class="grid grid-rows-2">
-                        <div class="mt-10 ">Nama Produk
-                            {{ '' }}
-                        </div>
-                        <div class="mt-6">Harga
-                            {{ '' }}
-                        </div>
-                    </div>
-                    <div class="grid grid-rows-2">
-                        <div class="mt-10 ml-28">
-                            
-                        </div>
-                        <div class="mt-6 ml-28">
-                            <input id="form1" min="0" name="quantity" value="1" type="number"
-                                class="form-control form-control-sm" style="width: 50px;" />
-
-                            <button class="btn btn-link px-2"
-                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
+            <div class="bg-white w-full h-fit rounded border border-neutral shadow-md ">
+                <div class="relative overflow-x-auto shadow-sm ">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    <span class="sr-only">Image</span>
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Produk
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Kuantitas
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Harga
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Aksi
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td class="w-32 p-4">
+                                    <img src="/docs/images/products/apple-watch.png" alt="Apple Watch">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                    Apple Watch
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div>
+                                            <input type="number" id="first_product"
+                                                class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="1" required>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                    $599
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class=" :outline-none text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-sm text-sm w-16 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                        Hapus</button>
+                                </td>
+                            </tr>
+                            <tr
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td class="w-32 p-4">
+                                    <img src="/docs/images/products/imac.png" alt="Apple Imac">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                    Imac 27"
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div>
+                                            <input type="number" id="second_product"
+                                                class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="1" required>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                    $2499
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class=" :outline-none text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-sm text-sm w-16 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                        Hapus</button>
+                                </td>
+                            </tr>
+                            <tr
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td class="w-32 p-4">
+                                    <img src="/docs/images/products/iphone-12.png" alt="Iphone 12">
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                    Iphone 12
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div>
+                                            <input type="number" id="third_product"
+                                                class="bg-gray-50 w-14 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2.5 py-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                placeholder="1" required>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                    $999
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button
+                                        class=" :outline-none text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-sm text-sm w-16 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                        Hapus</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="border border-b border-grey-50 w-full mt-4"></div>
+                <div class="bg-white h-20 inset-x-0 bottom-0">
+                        <table class="table-auto w-full justify-center ">
+                            <thead class="h-20 justify-center bg-white">
+                                <tr>
+                                <th class="text-right font-medium text-sm text-gray-600">Total Harga :</th>
+                                    <th>
+                                        Rp
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
             </div>
         </div>
+        <button
+            class=":outline-none mt-5 mb-10 mr-11 text-white bg-yellow-300 hover:bg-yellow-200 focus:ring-4 focus:ring-yellow-200 font-medium rounded-sm text-sm w-full py-2 bg-yellow-300 :hover:bg-yellow-200 focus:ring-yellow-200">
+            Simpan</button>
     </div>
     <!-- <div class="card shadow-2-strong mb-5 mb-lg-0 pt-20 mt-20" style="border-radius: 16px;">
         <div class="card-body p-4">
@@ -213,22 +314,11 @@
                     </button>
 
                 </div> -->
-    <!-- </div>
+<!-- </div>
 
         </div>
-    </div> -->
-</template>
+    </div> --></template>
 
 <script setup>
-import { RouterView, RouterLink } from 'vue-router'
-
-// defineProps({
-//   desa: Array,
-// })
-const navigation = [
-    // { name: 'Home', href: '/' },
-    // { name: 'Cart', href: '/Cart' },
-    // { name: 'Catalogue', href: '/Catalogue' },
-    { name: 'ProductDetail', href: '/ProductDetail' },
-]
+// const desa = ref([]);
 </script>

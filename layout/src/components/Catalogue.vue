@@ -5,12 +5,13 @@
 
         <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 ">
           <a v-for="product in products" :key="product.id" :href="product.href" class="group hover:bg-neutral-50">
-            <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
+            <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200 xl:aspect-w-7 xl:aspect-h-8" >
               <img :src="product.gambar" :alt="product.gambar"
                 class="h-full w-full object-cover object-center group-hover:opacity-75" />
             </div>
             <h3 class="mt-4 text-sm text-center text-gray-700">{{ product.nama_barang }}</h3>
             <p class="mt-1 text-lg text-center font-medium text-gray-900">{{ product.harga_ritel }} s/d {{ product.harga_proyek }}</p>
+            <button class="btn btn-xs mx-10 mt-3 rounded">+ Keranjang</button>
           </a>
         </div>
       </div>
@@ -18,15 +19,9 @@
 </template>
 
 <script setup>
-import { RouterView, RouterLink } from 'vue-router'
 
 defineProps({
   products: Array,
 })
-  const navigation = [
-    // { name: 'Home', href: '/' },
-    // { name: 'Cart', href: '/Cart' },
-    // { name: 'Catalogue', href: '/Catalogue' },
-    { name: 'ProductDetail', href: '/ProductDetail' },
-  ]
+
 </script>

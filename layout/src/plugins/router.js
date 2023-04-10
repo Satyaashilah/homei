@@ -3,7 +3,10 @@ import Home from './../views/Home.vue';
 import Cart from './../views/Cart.vue';
 import Catalogue from './../views/Catalogue.vue';
 import ProductDetail from './../views/ProductDetail.vue';
-import Payment from '../components/Payment.vue';
+import Payment from '../views/Payment.vue';
+import Shipment from '../views/Shipment.vue';
+import Profile from '../views/Profile.vue';
+import History from '../views/History.vue';
 
 const routes = [
     {
@@ -17,9 +20,19 @@ const routes = [
         component: () => import('./../views/Cart.vue')
     },
     {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('./../views/Profile.vue')
+    },
+    {
         path: '/payment',
         name: 'Payment',
         component: () => import('./../views/Payment.vue')
+    },
+    {
+        path: '/shipment',
+        name: 'Shipment',
+        component: () => import('./../views/Shipment.vue')
     },
     {
         path: '/catalogue',
@@ -30,6 +43,11 @@ const routes = [
         path: '/productdetail',
         name: 'ProductDetail',
         component: () => import('./../views/ProductDetail.vue')
+    },
+    {
+        path: '/history',
+        name: 'History',
+        component: () => import('./../views/History.vue')
     },
 ]
 

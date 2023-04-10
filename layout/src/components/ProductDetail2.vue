@@ -8,10 +8,10 @@
                 class="h-full w-full object-cover object-center" />
         </div>
         <div class="col-span-2 border border-gray">
-                <div class="font-medium text-xl text-grey-800 ml-20">
-                    Nama Barang
-                </div>
+            <div class="font-medium text-xl text-grey-800 ml-20">
+                Nama Barang
             </div>
+        </div>
     </div>
     <!-- <div class="mt-20 pt-20 mx-20">
         <div class="grid grid-cols-3 gap-4 bg-gray ">

@@ -1,13 +1,13 @@
 <template>
     <Navbar />
-    <Payment />
+    <Profile />
   </template>
   
   <script setup>
   import { ref, onMounted } from 'vue'
   import Navbar from '../components/Navbar.vue'
-  import Payment from '../components/Payment.vue';
-  import AddressServices from '../services/AddressServices'
+  import Profile from '../components/Profile.vue';
+
   </script>
   <style scoped></style>
   

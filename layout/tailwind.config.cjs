@@ -9,7 +9,9 @@ module.exports = {
     extend: {
       gridTemplateRows: {
         '[auto,auto,1fr]': 'auto auto 1fr',
+        
       },
+      display: ["group-hover"],
     }
     },
     plugins: [

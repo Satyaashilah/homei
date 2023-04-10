@@ -36,6 +36,9 @@
 
             <div class="w-screen">
                 <div class="pt-20 mx-10">
+                    <div class="pt-20 mt-10 text-2xl font-bold">
+                        Your Orders
+                    </div>
                     <table class="table-auto w-full justify-center mt-20 pt-20 mr-24">
                         <thead class="h-20 justify-center bg-gray-50 border-b-8 border-white">
                             <tr>
@@ -91,32 +94,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="bg-grey-300 h-20 absolute inset-x-0 bottom-0">
-                        <table class="table-auto w-full justify-center mt-20 pt-20 mr-24">
-                            <thead class="h-20 justify-center bg-gray-50 border-b border-grey-200">
-                                <tr>
-                                    <th>
-                                        <label class="ml-11 mr-11">
-                                            <input type="checkbox" class="checkbox" />
-                                        </label>
-                                        Pilih Semua
-                                    </th>
-                                    <th class="w-2/12"></th>
-                                <th></th>
-                                <th></th>
-                                <th class="text-right font-medium text-sm text-gray-600">Total Harga :</th>
-                                    <th >
-                                        Rp
-                                    </th>
-                                    <th class="text-right">
-                                        <button
-                                        class=":outline-none mr-11 text-white bg-yellow-300 hover:bg-yellow-300 focus:ring-4 focus:ring-yellow-300 font-medium rounded-sm text-sm w-16 py-2 bg-yellow-300 :hover:bg-yellow-200 focus:ring-yellow-200">
-                                        Bayar</button>
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -142,59 +119,5 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
-
-const sortOptions = [
-    { name: 'Price: Low to High', href: '#', current: false },
-    { name: 'Price: High to Low', href: '#', current: false },
-]
-// const subCategories = [
-//   { name: 'Totes', href: '#' },
-//   { name: 'Backpacks', href: '#' },
-//   { name: 'Travel Bags', href: '#' },
-//   { name: 'Hip Bags', href: '#' },
-//   { name: 'Laptop Sleeves', href: '#' },
-// ]
-const filters = [
-    {
-        id: 'material',
-        name: 'Riwayat Transaksi',
-        options: [
-            { value: 'besi', label: 'Besi', checked: false },
-            { value: 'bajaringan', label: 'Baja Ringan', checked: false },
-            { value: 'cat', label: 'Cat', checked: true },
-            { value: 'genting', label: 'Genting', checked: false },
-            { value: 'plafonatap', label: 'Plafon Atap', checked: false },
-            { value: 'keramik', label: 'Keramik', checked: false },
-            { value: 'bajaringan', label: 'Baja Ringan', checked: false },
-            { value: 'semen', label: 'Semen', checked: false },
-            { value: 'pasir', label: 'Pasir', checked: false },
-            { value: 'batucoral', label: 'Batu Coral', checked: false },
-        ],
-    },
-    {
-        id: 'category',
-        name: 'Category',
-        options: [
-            { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-            { value: 'sale', label: 'Sale', checked: false },
-            { value: 'travel', label: 'Travel', checked: true },
-            { value: 'organization', label: 'Organization', checked: false },
-            { value: 'accessories', label: 'Accessories', checked: false },
-        ],
-    },
-    {
-        id: 'size',
-        name: 'Size',
-        options: [
-            { value: '2l', label: '2L', checked: false },
-            { value: '6l', label: '6L', checked: false },
-            { value: '12l', label: '12L', checked: false },
-            { value: '18l', label: '18L', checked: false },
-            { value: '20l', label: '20L', checked: false },
-            { value: '40l', label: '40L', checked: true },
-        ],
-    },
-]
-
 const mobileFiltersOpen = ref(false)
 </script>

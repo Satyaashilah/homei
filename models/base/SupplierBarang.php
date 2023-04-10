@@ -196,7 +196,8 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
     }
 
 
-    public static function faker($count = 10){
+    public static function faker($count = 10)
+    {
         $faker= \Faker\Factory::create();
         $faker->addProvider(new \app\components\faker\provider\MyImage($faker));
         $data = [];

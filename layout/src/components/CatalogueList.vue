@@ -171,7 +171,6 @@
             <div class="lg:col-span-3">
               <Catalogue :products="products" />
               <!-- Your content -->
-              <!-- <Pagination /> -->
             </div>
           </div>
         </section>
@@ -182,7 +181,6 @@
 
 <script setup>
 import Catalogue from './Catalogue.vue'
-import Pagination from './Pagination.vue'
 import { ref } from 'vue'
 import {
   Dialog,
@@ -197,18 +195,11 @@ import {
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
+import { XMarkIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
 
 defineProps({
   products: Array,
 })
-
-const sortOptions = [
-  { name: 'Price: Low to High', href: '#', value: '1', current: false },
-  { name: 'Price: High to Low', href: '#', value: '2', current: false },
-]
-const sort = ref([]);
 const materials = ref([]);
 const search = ref(null);
 const filters = [
