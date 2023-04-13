@@ -126,7 +126,7 @@
 <script setup>
 import Catalogue from './Catalogue.vue'
 import Pagination from './Pagination.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
     Dialog,
     DialogPanel,
@@ -142,59 +142,20 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
+import CartServices from '../services/CartServices'
 
-const sortOptions = [
-    { name: 'Price: Low to High', href: '#', current: false },
-    { name: 'Price: High to Low', href: '#', current: false },
-]
-// const subCategories = [
-//   { name: 'Totes', href: '#' },
-//   { name: 'Backpacks', href: '#' },
-//   { name: 'Travel Bags', href: '#' },
-//   { name: 'Hip Bags', href: '#' },
-//   { name: 'Laptop Sleeves', href: '#' },
-// ]
-const filters = [
-    {
-        id: 'material',
-        name: 'Riwayat Transaksi',
-        options: [
-            { value: 'besi', label: 'Besi', checked: false },
-            { value: 'bajaringan', label: 'Baja Ringan', checked: false },
-            { value: 'cat', label: 'Cat', checked: true },
-            { value: 'genting', label: 'Genting', checked: false },
-            { value: 'plafonatap', label: 'Plafon Atap', checked: false },
-            { value: 'keramik', label: 'Keramik', checked: false },
-            { value: 'bajaringan', label: 'Baja Ringan', checked: false },
-            { value: 'semen', label: 'Semen', checked: false },
-            { value: 'pasir', label: 'Pasir', checked: false },
-            { value: 'batucoral', label: 'Batu Coral', checked: false },
-        ],
-    },
-    {
-        id: 'category',
-        name: 'Category',
-        options: [
-            { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-            { value: 'sale', label: 'Sale', checked: false },
-            { value: 'travel', label: 'Travel', checked: true },
-            { value: 'organization', label: 'Organization', checked: false },
-            { value: 'accessories', label: 'Accessories', checked: false },
-        ],
-    },
-    {
-        id: 'size',
-        name: 'Size',
-        options: [
-            { value: '2l', label: '2L', checked: false },
-            { value: '6l', label: '6L', checked: false },
-            { value: '12l', label: '12L', checked: false },
-            { value: '18l', label: '18L', checked: false },
-            { value: '20l', label: '20L', checked: false },
-            { value: '40l', label: '40L', checked: true },
-        ],
-    },
-]
+function fetchCart() {
+    const cartService = new CartServices();
+
+    cartService.getProducts().then(response => {
+
+    });
+
+}
 
 const mobileFiltersOpen = ref(false)
+
+onMounted(() => {
+    fetchCart();
+})
 </script>

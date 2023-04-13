@@ -7,6 +7,8 @@ import Payment from '../views/Payment.vue';
 import Shipment from '../views/Shipment.vue';
 import Profile from '../views/Profile.vue';
 import History from '../views/History.vue';
+import Login from '../views/Login.vue';
+import Register from '../views/Register.vue';
 
 const routes = [
     {
@@ -48,6 +50,16 @@ const routes = [
         path: '/history',
         name: 'History',
         component: () => import('./../views/History.vue')
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import('./../views/Login.vue')
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: () => import('./../views/Register.vue')
     },
 ]
 

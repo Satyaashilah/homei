@@ -38,6 +38,7 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
 
         return $parent;
     }
+    
 
     public function verbs()
     {
@@ -59,20 +60,20 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
     {
         return [
             "material" => SupplierMaterial::find()->select('id,nama')->all(),
-            // "sort" => [
-            //     [
-            //         "id" => 0,
-            //         "nama" => "Default"
-            //     ],
-            //     [
-            //         "id" => 1,
-            //         "nama" => "Sortir dari yang termurah",
-            //     ],
-            //     [
-            //         "id" => 2,
-            //         "nama" => "Sortir dari yang termahal",
-            //     ],
-            // ]
+            "sort" => [
+                [
+                    "id" => 0,
+                    "nama" => "Default"
+                ],
+                [
+                    "id" => 1,
+                    "nama" => "Sortir dari yang termurah",
+                ],
+                [
+                    "id" => 2,
+                    "nama" => "Sortir dari yang termahal",
+                ],
+            ]
         ];
     }
 
@@ -88,7 +89,8 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
             'harga_proyek',
             'minimal_beli_satuan',
             'minimal_beli_volume',
-            'gambar'
+            'gambar',
+            'deskripsi'
         ]);
 // kalo tanda q dihapus barang yang tampil jadi cuma sedikit, tapi kalo ga di hapus nanti fitur search nya ga fungsi alias nampilin seluruh data tanpa filter
         if ($search = Yii::$app->request->get('q')) {
@@ -212,4 +214,126 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
             else  throw new \yii\web\HttpException($th->statusCode ?? 500, $this->message500());
         }
     }
+
+    public function actionListKeranjang()
+    {
+        $user = Constant::getUser();
+        return SupplierOrderCart::find()->where([
+            'user_id' => $user->id,
+        ])->all();
+    }
+
+    public function actionTambahKeranjang($id)
+    {
+        $user = Constant::getUser();
+        $product = $this->findModel($id);
+        $cart = SupplierOrderCart::findOne([
+            'user_id' => $user->id,
+            'supplier_barang_id' => $product->id
+        ]);
+
+        $jumlah = floatval(Yii::$app->request->post('jumlah'));
+        $jumlah = ($jumlah == 0) ? 1 : $jumlah;
+
+        try {
+            if (!$cart) {
+                if ($product->stok == 0) {
+                    throw new HttpException(400, "Stok item tidak tersedia");
+                }
+                $new = new SupplierOrderCart();
+                $new->kode_unik = Yii::$app->security->generateRandomString(30);
+                $new->user_id = $user->id;
+                $new->material_id = $product->material_id;
+                $new->submaterial_id = $product->submaterial_id;
+                $new->supplier_id = $product->supplier_id;
+                $new->supplier_barang_id = $product->id;
+                $new->jumlah = $jumlah;
+                $new->harga_satuan = $product->harga_ritel;
+                $new->subtotal = $new->jumlah * $product->harga_ritel;
+                $new->valid_spk = 0; // bypass bonus
+                if ($new->validate() == false) {
+                    throw new HttpException(400, Constant::flattenError($new->getErrors()));
+                }
+                $new->save();
+                return [
+                    "success" => true,
+                    "message" => Yii::t("cruds", "Berhasil menambahkan ke keranjang")
+                ];
+            } else {
+                throw new HttpException(400, Yii::t("cruds", "Item ini telah ditambahkan sebelumnya"));
+            }
+        } catch (\Throwable $th) {
+            throw new HttpException($th->statusCode ?? 500, $th->getMessage() ?? "Telah terjadi kesalahan");
+        }
+    }
+
+    public function actionUpdateKeranjang($uniq, $type)
+    {
+        $user = Constant::getUser();
+        $cart = $this->findModelKeranjang([
+            'user_id' => $user->id,
+            'kode_unik' => $uniq
+        ]);
+
+        if (Constant::isMethod(['post']) == false) {
+            throw new HttpException(405, "Method tidak di izinkan");
+        }
+
+        try {
+            if ($type == "tambah") {
+                $cart->jumlah += 1;
+            } else if ($type == "kurang") {
+                $cart->jumlah -= 1;
+            } else if ($type == "ubah") {
+                $jumlah = floatval(Yii::$app->request->post('jumlah'));
+                $jumlah = ($jumlah == 0) ? 1 : $jumlah;
+                $cart->jumlah = $jumlah;
+            } else {
+                throw new HttpException(400, "Tipe operasi tidak tersedia");
+            }
+
+            if ($cart->jumlah <= 0) {
+                $cart->delete();
+                return ["success" => 200, "message" => "Item berhasil dihapus dari keranjang"];
+            }
+
+            if ($cart->jumlah >= $cart->supplierBarang->minimal_beli_satuan && $cart->valid_spk == 1) $harga = $cart->supplierBarang->harga_proyek;
+            else  $harga = $cart->supplierBarang->harga_ritel;
+
+            $cart->harga_satuan = $harga;
+            $cart->subtotal = $cart->jumlah * $harga;
+            if ($cart->validate() == false) {
+                throw new HttpException(400, Constant::flattenError($cart->getErrors()));
+            }
+
+            $cart->save();
+            return [
+                "success" => true,
+                "data" => $cart,
+                "message" => Yii::t("cruds", "Berhasil ubah ke keranjang")
+            ];
+        } catch (\Throwable $th) {
+            throw new HttpException($th->statusCode ?? 500, $th->getMessage() ?? "Telah terjadi kesalahan");
+        }
+    }
+
+    public function actionHapusKeranjang($uniq)
+    {
+        $user = Constant::getUser();
+        $cart = $this->findModelKeranjang([
+            'user_id' => $user->id,
+            'kode_unik' => $uniq
+        ]);
+
+        if (Constant::isMethod(['delete']) == false) {
+            throw new HttpException(405, "Method tidak di izinkan");
+        }
+
+        try {
+            $cart->delete();
+        } catch (\Throwable $th) {
+            throw new HttpException($th->statusCode ?? 500, $th->getMessage() ?? "Telah terjadi kesalahan");
+        }
+    }
+    
 }

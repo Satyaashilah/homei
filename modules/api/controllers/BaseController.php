@@ -24,20 +24,20 @@ class BaseController extends \yii\rest\Controller
         'collectionEnvelope' => 'data',
     ];
 
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        
+
+        $auth = $behaviors['authenticator'];
+        unset($behaviors['authenticator']);
+
         return array_merge([
             'corsFilter'  => [
                 'class' => \yii\filters\Cors::className(),
                 'cors'  => [
-                    'Origin'                           => [
-                        'localhost',
-                        'localhost:5173',
-                        'http://localhost:5173',
-                    ],
-                    'Access-Control-Request-Method'    => ['POST'],
+                    'Origin'                           => ['http://localhost:5173',],
+                    'Access-Control-Request-Method'    => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                     'Access-Control-Allow-Credentials' => true,
                     'Access-Control-Max-Age'           => 3600,                 // Cache (seconds)
                 ],
@@ -62,6 +62,11 @@ class BaseController extends \yii\rest\Controller
                 'only' => [],
             ]
         ], $behaviors);
+        // re-add authentication filter
+        $behaviors['authenticator'] = $auth;
+        // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
+        $behaviors['authenticator']['except'] = ['options'];
+        return $behaviors;
     }
 
     /**

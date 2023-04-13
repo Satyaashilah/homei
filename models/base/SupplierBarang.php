@@ -49,6 +49,7 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
 
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
+    const SCENARIO_UPDATE_STOK = 'update-stok';
     public $_render = [];
 
     /**
@@ -92,8 +93,10 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
             [['supplier_id', 'material_id', 'submaterial_id', 'satuan_id', 'panjang', 'lebar', 'tebal', 'stok', 'harga_ritel', 'harga_proyek', 'minimal_beli_satuan', 'minimal_beli_volume', 'created_by', 'updated_by', 'deleted_by', 'status', 'flag'], 'integer'],
             [['deskripsi', 'gambar', 'params'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
+            [['supplier_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\Supplier::className(), 'targetAttribute' => ['supplier_id' => 'id']],
+            [['material_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\SupplierMaterial::className(), 'targetAttribute' => ['material_id' => 'id']],
             [['nama_barang', 'slug'], 'string', 'max' => 255],
-            [['id'], 'unique']
+            [['satuan_id'], 'exist', 'skipOnError' => true, 'targetClass' => \app\models\MasterSatuan::className(), 'targetAttribute' => ['satuan_id' => 'id']],
         ];
     }
 
@@ -143,7 +146,57 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
         ]);
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSupplier()
+    {
+        return $this->hasOne(\app\models\Supplier::className(), ['id' => 'supplier_id']);
+    }
 
+    public function getMaterial()
+    {
+        return $this->hasOne(\app\models\SupplierMaterial::className(), ['id' => 'material_id']);
+    }
+
+    public function getSupplierSubMaterial()
+    {
+        return $this->hasOne(\app\models\SupplierSubMaterial::className(), ['id' => 'submaterial_id']);
+    }
+
+    public function getCreatedBy()
+    {
+        return $this->hasOne(\app\models\User::className(), ['id' => 'created_by']);
+    }
+
+    public function getUpdatedBy()
+    {
+        return $this->hasOne(\app\models\User::className(), ['id' => 'updated_by']);
+    }
+
+    public function getDeletedBy()
+    {
+        return $this->hasOne(\app\models\User::className(), ['id' => 'deleted_by']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSatuan()
+    {
+        return $this->hasOne(\app\models\MasterSatuan::className(), ['id' => 'satuan_id']);
+    }
+
+
+
+    /**
+     * @inheritdoc
+     * @return \app\models\query\SupplierBarangQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new \app\models\query\SupplierBarangQuery(get_called_class());
+    }
 
 
 
@@ -178,9 +231,13 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
             'status',
             'flag',
         ];
+        $stok = [
+            'stok'
+        ];
 
         $parent[static::SCENARIO_CREATE] = $columns;
         $parent[static::SCENARIO_UPDATE] = $columns;
+        $parent[static::SCENARIO_UPDATE_STOK] = $stok;
         return $parent;
     }
 
@@ -191,21 +248,257 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
     public function fields()
     {
         $parent = parent::fields();
-
+        if (isset($parent['id'])) :
+            unset($parent['id']);
+            $parent['id'] = function ($model) {
+                return $model->id;
+            };
+        endif;
+        if (isset($parent['material_id'])) :
+            unset($parent['material_id']);
+            $parent['material_id'] = function ($model) {
+                return $model->material_id;
+            };
+            // $parent['_material'] = function ($model) {
+            //     $rel = $model->getMaterial()->select('nama')->one();
+            //     if ($rel) :
+            //         return $rel;
+            //     endif;
+            //     return null;
+            // };
+        endif;
+        if (isset($parent['submaterial_id'])) :
+            unset($parent['submaterial_id']);
+            $parent['submaterial_id'] = function ($model) {
+                return $model->submaterial_id;
+            };
+            $parent['_submaterial'] = function ($model) {
+                $rel = $model->getSupplierSubMaterial()->select('nama')->one();
+                if ($rel) :
+                    return $rel;
+                endif;
+                return null;
+            };
+        endif;
+        if (isset($parent['supplier_id'])) :
+            unset($parent['supplier_id']);
+            $parent['supplier_id'] = function ($model) {
+                return $model->supplier_id;
+            };
+            // $parent['_supplier'] = function ($model) {
+            //     $rel = $model->getSupplier()->select([
+            //         'nama_supplier',
+            //         'alamat',
+            //         'telepon'
+            //     ])->one();
+            //     if ($rel) :
+            //         return $rel;
+            //     endif;
+            //     return null;
+            // };
+        endif;
+        if (isset($parent['nama_barang'])) :
+            unset($parent['nama_barang']);
+            $parent['nama_barang'] = function ($model) {
+                return $model->nama_barang;
+            };
+        endif;
+        if (isset($parent['slug'])) :
+            unset($parent['slug']);
+            $parent['slug'] = function ($model) {
+                return $model->slug;
+            };
+        endif;
+        if (isset($parent['satuan_id'])) :
+            unset($parent['satuan_id']);
+            $parent['satuan_id'] = function ($model) {
+                return $model->satuan_id;
+            };
+            $parent['_satuan'] = function ($model) {
+                $rel = $model->getSatuan()->select('nama')->one();
+                if ($rel) :
+                    return $rel;
+                endif;
+                return null;
+            };
+        endif;
+        if (isset($parent['panjang'])) :
+            unset($parent['panjang']);
+            $parent['panjang'] = function ($model) {
+                return $model->panjang;
+            };
+        endif;
+        if (isset($parent['lebar'])) :
+            unset($parent['lebar']);
+            $parent['lebar'] = function ($model) {
+                return $model->lebar;
+            };
+        endif;
+        if (isset($parent['tebal'])) :
+            unset($parent['tebal']);
+            $parent['tebal'] = function ($model) {
+                return $model->tebal;
+            };
+        endif;
+        if (isset($parent['harga_ritel'])) :
+            unset($parent['harga_ritel']);
+            $parent['harga_ritel'] = function ($model) {
+                return $model->harga_ritel;
+            };
+        endif;
+        if (isset($parent['harga_proyek'])) :
+            unset($parent['harga_proyek']);
+            $parent['harga_proyek'] = function ($model) {
+                return $model->harga_proyek;
+            };
+        endif;
+        if (isset($parent['stok'])) :
+            unset($parent['stok']);
+            $parent['stok'] = function ($model) {
+                return $model->stok;
+            };
+        endif;
+        if (isset($parent['minimal_beli_satuan'])) :
+            unset($parent['minimal_beli_satuan']);
+            $parent['minimal_beli_satuan'] = function ($model) {
+                return $model->minimal_beli_satuan;
+            };
+        endif;
+        if (isset($parent['minimal_beli_volume'])) :
+            unset($parent['minimal_beli_volume']);
+            $parent['minimal_beli_volume'] = function ($model) {
+                return $model->minimal_beli_volume;
+            };
+        endif;
+        if (isset($parent['deskripsi'])) :
+            unset($parent['deskripsi']);
+            $parent['deskripsi'] = function ($model) {
+                return $model->deskripsi;
+            };
+        endif;
+        if (isset($parent['gambar'])) :
+            unset($parent['gambar']);
+            $parent['gambar'] = function ($model) {
+                return \Yii::$app->formatter->asMyimage($model->gambar, false);
+            };
+        endif;
+        if (isset($parent['created_at'])) :
+            unset($parent['created_at']);
+            $parent['created_at'] = function ($model) {
+                return \app\components\Tanggal::toReadableDate($model->created_at, false);
+            };
+        endif;
+        if (isset($parent['updated_at'])) :
+            unset($parent['updated_at']);
+            $parent['updated_at'] = function ($model) {
+                return \app\components\Tanggal::toReadableDate($model->updated_at, false);
+            };
+        endif;
+        if (isset($parent['created_by'])) :
+            unset($parent['created_by']);
+            $parent['created_by'] = function ($model) {
+                return $model->created_by;
+            };
+            $parent['_created_by'] = function ($model) {
+                $rel = $model->getCreatedBy()->select('username')->one();
+                if ($rel) :
+                    return $rel;
+                endif;
+                return null;
+            };
+        endif;
+        if (isset($parent['updated_by'])) :
+            unset($parent['updated_by']);
+            $parent['updated_by'] = function ($model) {
+                return $model->updated_by;
+            };
+            $parent['_updated_by'] = function ($model) {
+                $rel = $model->getUpdatedBy()->select('username')->one();
+                if ($rel) :
+                    return $rel;
+                endif;
+                return null;
+            };
+        endif;
+        if (isset($parent['deleted_by'])) :
+            unset($parent['deleted_by']);
+            $parent['deleted_by'] = function ($model) {
+                return $model->deleted_by;
+            };
+            $parent['_deleted_by'] = function ($model) {
+                $rel = $model->getDeletedBy()->select('username')->one();
+                if ($rel) :
+                    return $rel;
+                endif;
+                return null;
+            };
+        endif;
+        if (isset($parent['status'])) :
+            unset($parent['status']);
+            $parent['status'] = function ($model) {
+                return $model->status;
+            };
+            $parent['_status'] = function ($model) {
+                return $model->getStatuses()[$model->status];
+            };
+        endif;
+        if (isset($parent['params'])) :
+            unset($parent['params']);
+        endif;
+        if (isset($parent['flag'])) :
+            unset($parent['flag']);
+            $parent['flag'] = function ($model) {
+                return $model->flag;
+            };
+        endif;
         return $parent;
     }
+    public function setRender($arr)
+    {
+        $this->_render = array_merge($this->_render, $arr);
+    }
 
+    public function removeRender($arr)
+    {
+        unset($this->_render[$arr]);
+    }
+
+    /**
+     * Simplify return data xD
+     */
+    public function render()
+    {
+        return array_merge($this->_render, [
+            "model" => $this,
+        ]);
+    }
+
+        /**
+     * override validate
+     */
+    public function validate($attributeNames = null, $clearErrors = true)
+    {
+        return parent::validate($attributeNames, $clearErrors);
+    }
+
+    /**
+     * override load
+     */
+    public function load($data, $formName = null, $service = "web")
+    {
+        return parent::load($data, $formName);
+    }
 
     public static function faker($count = 10)
     {
-        $faker= \Faker\Factory::create();
+        $faker = \Faker\Factory::create();
         $faker->addProvider(new \app\components\faker\provider\MyImage($faker));
         $data = [];
         $maxId = static::find()->max('id');
 
         // relational data
         for ($i = 0; $i < $count; $i++) {
-            $data[] = [ 
+            $data[] = [
                 "supplier_id" => $faker->unique()->numberBetween($maxId, $maxId + $count),
                 "material_id" => $faker->unique()->numberBetween($maxId, $maxId + $count),
                 "submaterial_id" => $faker->unique()->numberBetween($maxId, $maxId + $count),
@@ -221,7 +514,7 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
                 "minimal_beli_satuan" => $faker->randomNumber(),
                 "minimal_beli_volume" => $faker->randomNumber(),
                 "deskripsi" => $faker->paragraphs($nb = 3, $asText = true),
-                "gambar" => "tmp/". $faker->myimage($dir = \Yii::getAlias('@webroot/uploads/tmp'), $width = 640, $height = 480, "cats", false),
+                "gambar" => "tmp/" . $faker->myimage($dir = \Yii::getAlias('@webroot/uploads/tmp'), $width = 640, $height = 480, "cats", false),
                 "params" => $faker->text(),
                 "created_at" => $faker->dateTime(),
                 "updated_at" => $faker->dateTime(),
@@ -235,5 +528,4 @@ abstract class SupplierBarang extends \yii\db\ActiveRecord
         }
         return $data;
     }
-
 }

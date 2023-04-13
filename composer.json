@@ -53,7 +53,8 @@
     },
     "config": {
         "allow-plugins": {
-            "yiisoft/yii2-composer" : true
+            "yiisoft/yii2-composer": true,
+            "fxp/composer-asset-plugin": true
         },
         "process-timeout": 1800,
         "fxp-asset": {

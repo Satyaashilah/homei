@@ -1,8 +1,10 @@
 <?php
+
 /**
  * Defri Indra Mahardika
  * ---- ----- --- -----
  **/
+
 namespace app\controllers\base;
 
 use app\models\SupplierBarang;
@@ -13,6 +15,8 @@ use yii\helpers\Url;
 use yii\filters\AccessControl;
 use dmstr\bootstrap\Tabs;
 use Yii;
+use app\components\UploadFile;
+use yii\web\UploadedFile;
 
 /**
  * SupplierBarangController implements the CRUD actions for SupplierBarang model.
@@ -22,11 +26,11 @@ class SupplierBarangController extends \app\components\productive\DefaultActiveC
     // dynamic message with translation
     use \app\traits\MessageTrait;
 
-    public $_redirectIndex = 1 ;
+    public $_redirectIndex = 1;
     public $validation = null;
 
     public $enableCsrfValidation = false;
-    
+
     public function __construct($id, $module, $config = [])
     {
         parent::__construct($id, $module, $config);
@@ -34,14 +38,14 @@ class SupplierBarangController extends \app\components\productive\DefaultActiveC
     }
 
     /**
-    * Lists all SupplierBarang models.
-    * @return mixed
-    */
+     * Lists all SupplierBarang models.
+     * @return mixed
+     */
     public function actionIndex()
     {
         $searchModel  = new SupplierBarangSearch;
         $dataProvider = $searchModel->search($_GET);
-        
+
         Tabs::clearLocalStorage();
 
         Url::remember();
@@ -72,23 +76,37 @@ class SupplierBarangController extends \app\components\productive\DefaultActiveC
         ]);
     }
 
-    /**
-    * Creates a new SupplierBarang model.
-    * If creation is successful, the browser will be redirected to the 'view' page.
-    * @return mixed
-    */
+
     public function actionCreate()
     {
         $render = $this->getRenderMethod();
         $model = new SupplierBarang;
         $model->scenario = $model::SCENARIO_CREATE;
-        
+
         try {
             if ($model->load($_POST)) :
-                if($model->validate()):
+                $gambars = UploadedFile::getInstance($model, 'gambar');
+                if ($gambars != NULL) {
+                    # store the source fotos name
+                    $model->gambar = $gambars->name;
+                    $arr = explode(".", $gambars->name);
+                    $extension = end($arr);
+
+                    # generate a unique fotos name
+                    $model->gambar = Yii::$app->security->generateRandomString() . ".{$extension}";
+
+                    # the path to save fotos
+                    // unlink(Yii::getAlias("@app/web/uploads/pengajuan/") . $oldFile);
+                    if (file_exists(Yii::getAlias("@app/web/uploads/gambar_produk/")) == false) {
+                        mkdir(Yii::getAlias("@app/web/uploads/gambar_produk/"), 0777, true);
+                    }
+                    $path = Yii::getAlias("@app/web/uploads/gambar_produk/") . $model->gambar;
+                    $gambars->saveAs($path);
+                }
+                if ($model->validate()) :
                     $model->save();
                     toastSuccess($this->messageCreateSuccess());
-                    if($this->_redirectIndex) return $this->redirect(['index']);
+                    if ($this->_redirectIndex) return $this->redirect(['index']);
                     return $this->redirect(['view', 'id' => $model->id]);
                 endif;
                 toastError(
@@ -102,7 +120,7 @@ class SupplierBarangController extends \app\components\productive\DefaultActiveC
                 $model->load($_GET);
             endif;
         } catch (\Exception $e) {
-            $msg = (isset($e->errorInfo[2]))?$e->errorInfo[2]:$e->getMessage();
+            $msg = (isset($e->errorInfo[2])) ? $e->errorInfo[2] : $e->getMessage();
             $model->addError('_exception', $msg);
             toastError($msg);
         }
@@ -110,7 +128,7 @@ class SupplierBarangController extends \app\components\productive\DefaultActiveC
         end:
         return $this->$render('create', $model->render());
     }
-    
+
     /**
      * Updates an existing SuratBeritaAcaraPemasanganAlat model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -123,13 +141,31 @@ class SupplierBarangController extends \app\components\productive\DefaultActiveC
 
         $model = $this->findModel($id);
         $model->scenario = $model::SCENARIO_UPDATE;
-        
+        $oldGambar = $model->gambar;
         try {
             if ($model->load($_POST)) :
-                if($model->validate()):
+                $gambars = UploadedFile::getInstance($model, 'gambar');
+                if ($gambars != NULL) {
+                    # store the source fotos name
+                    $model->gambar = $gambars->name;
+                    $arr = explode(".", $gambars->name);
+                    $extension = end($arr);
+
+                    # generate a unique fotos name
+                    $model->gambar = Yii::$app->security->generateRandomString() . ".{$extension}";
+
+                    # the path to save fotos
+                    // unlink(Yii::getAlias("@app/web/uploads/pengajuan/") . $oldFile);
+                    if (file_exists(Yii::getAlias("@app/web/uploads/gambar_produk/")) == false) {
+                        mkdir(Yii::getAlias("@app/web/uploads/gambar_produk/"), 0777, true);
+                    }
+                    $path = Yii::getAlias("@app/web/uploads/gambar_produk/") . $model->gambar;
+                    $gambars->saveAs($path);
+                }
+                if ($model->validate()) :
                     $model->save();
                     toastSuccess($this->messageUpdateSuccess());
-                    if($this->_redirectIndex) return $this->redirect(['index']);
+                    if ($this->_redirectIndex) return $this->redirect(['index']);
                     return $this->redirect(['view', 'id' => $model->id]);
                 endif;
                 toastError(
@@ -175,26 +211,26 @@ class SupplierBarangController extends \app\components\productive\DefaultActiveC
 
         // TODO: improve detection
         $isPivot = strstr('$id', ',');
-        if ($isPivot == true):
+        if ($isPivot == true) :
             return $this->redirect(Url::previous());
-        elseif (isset(\Yii::$app->session['__crudReturnUrl']) && \Yii::$app->session['__crudReturnUrl'] != '/'):
+        elseif (isset(\Yii::$app->session['__crudReturnUrl']) && \Yii::$app->session['__crudReturnUrl'] != '/') :
             Url::remember(null);
             $url = \Yii::$app->session['__crudReturnUrl'];
             \Yii::$app->session['__crudReturnUrl'] = null;
 
             return $this->redirect($url);
-        else:
+        else :
             return $this->redirect(['index']);
         endif;
     }
 
     /**
-    * Finds the SupplierBarang model based on its primary key value.
-    * If the model is not found, a 404 HTTP exception will be thrown.
-    * @param integer $id
-    * @return SupplierBarang the loaded model
-    * @throws HttpException if the model cannot be found
-    */
+     * Finds the SupplierBarang model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return SupplierBarang the loaded model
+     * @throws HttpException if the model cannot be found
+     */
     protected function findModel($id)
     {
         if (($model = SupplierBarang::findOne($id)) !== null) {

@@ -44,10 +44,9 @@
                             <tr>
                                 <th>
                                     <label class="ml-11">
-                                        <input type="checkbox" class="checkbox" />
-                                    </label>
-                                </th>
                                 <th class="w-1/6">Produk</th>
+                                </label>
+                                </th>
                                 <th class="w-2/12"></th>
                                 <th>Harga Satuan</th>
                                 <th>Kuantitas</th>
@@ -58,12 +57,7 @@
                         <tbody class="pt-20 bg-gray-50 border-t-4 border-white">
                             <tr>
                                 <td>
-                                    <label class="ml-11">
-                                        <input type="checkbox" class="checkbox" />
-                                    </label>
-                                </td>
-                                <td>
-                                    <div class="w-20 h-20">
+                                    <div class="ml-11 w-20 h-20">
                                         <img src="./../assets/homei.png" alt="Avatar Tailwind CSS Component" />
                                     </div>
                                 </td>

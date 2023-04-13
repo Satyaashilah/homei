@@ -26,6 +26,15 @@ class AuthController extends \yii\rest\ActiveController
         $behaviors = parent::behaviors();
 
         return array_merge([
+            'corsFilter'  => [
+                'class' => \yii\filters\Cors::className(),
+                'cors'  => [
+                    'Origin'                           => ['http://localhost:5173', ],
+                    'Access-Control-Request-Method'    => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+                    'Access-Control-Allow-Credentials' => true,
+                    'Access-Control-Max-Age'           => 3600,                 // Cache (seconds)
+                ],
+            ],
             'contentNegotiator' => [
                 'class' => yii\filters\ContentNegotiator::className(),
                 'formats' => [
