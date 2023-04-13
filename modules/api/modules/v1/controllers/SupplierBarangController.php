@@ -14,6 +14,7 @@ use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\debug\models\timeline\DataProvider;
 use app\components\Constant;
+use app\models\SupplierBarang;
 use app\models\SupplierMaterial;
 use app\models\SupplierOrderCart;
 use app\models\SupplierSubMaterial;
@@ -38,7 +39,7 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
 
         return $parent;
     }
-    
+
 
     public function verbs()
     {
@@ -79,6 +80,8 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
 
     public function actionIndex()
     {
+        // $nama_barang = SupplierBarang::find();
+        // $search = $this->find();
         $query = $this->modelClass::find()->select([
             'id',
             'nama_barang',
@@ -92,9 +95,12 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
             'gambar',
             'deskripsi'
         ]);
-// kalo tanda q dihapus barang yang tampil jadi cuma sedikit, tapi kalo ga di hapus nanti fitur search nya ga fungsi alias nampilin seluruh data tanpa filter
-        if ($search = Yii::$app->request->get('q')) {
-            $query->andWhere(
+        // kalo tanda q dihapus barang yang tampil jadi cuma sedikit, tapi kalo ga di hapus nanti fitur search nya ga fungsi alias nampilin seluruh data tanpa filter
+        // if ($search = $search->andWhere(['like', 'nama_barang', $nama_barang])) {
+        // }$search->all();
+
+        if ($search = Yii::$app->request->get('nama_barang')) {
+            $query->Where(
                 [
                     'like',
                     'nama_barang',
@@ -335,5 +341,4 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
             throw new HttpException($th->statusCode ?? 500, $th->getMessage() ?? "Telah terjadi kesalahan");
         }
     }
-    
 }

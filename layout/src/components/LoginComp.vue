@@ -26,7 +26,7 @@
                 <label for="password" class="sr-only">Password</label>
 
                 <div class="relative">
-                    <input v-model="passwordValue" type="password"
+                    <input v-model="passwordValue" 
                         class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
                         placeholder="Enter password" />
                     <!-- {{ login.password }} -->

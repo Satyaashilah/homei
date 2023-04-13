@@ -25,6 +25,9 @@ class AuthController extends \yii\rest\ActiveController
     {
         $behaviors = parent::behaviors();
 
+        $auth = $behaviors['authenticator'];
+        unset($behaviors['authenticator']);
+
         return array_merge([
             'corsFilter'  => [
                 'class' => \yii\filters\Cors::className(),
@@ -33,6 +36,9 @@ class AuthController extends \yii\rest\ActiveController
                     'Access-Control-Request-Method'    => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                     'Access-Control-Allow-Credentials' => true,
                     'Access-Control-Max-Age'           => 3600,                 // Cache (seconds)
+                    'Access-Control-Allow-Origin'      => ['*'],
+                    // 'Access-Control-Request-Headers' => ['*'],
+                    'Access-Control-Expose-Headers' => [],
                 ],
             ],
             'contentNegotiator' => [
@@ -54,6 +60,11 @@ class AuthController extends \yii\rest\ActiveController
                 'except' => ['login', 'register'],
             ],
         ], $behaviors);
+        // re-add authentication filter
+        $behaviors['authenticator'] = $auth;
+        // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
+        $behaviors['authenticator']['except'] = ['options'];
+        return $behaviors;
 
         return $behaviors;
     }
@@ -158,7 +169,7 @@ class AuthController extends \yii\rest\ActiveController
 
             if (isset($user)) :
                 if (\Yii::$app->security->validatePassword($_POST['password'], $user->password) == false)
-                    throw new HttpException(400, Yii::t("action_message", "User tidak dapat ditemukan"));
+                    throw new HttpException(400, Yii::t("action_message", "Password Salah"));
 
                 $user->scenario = $user::SCENARIO_UPDATE;
                 $generate_random_string = (new \app\helpers\SsoTokenHelper)->generateToken();
