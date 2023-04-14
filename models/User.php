@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\HttpException;
 
 class User extends \app\models\base\User implements \yii\web\IdentityInterface
 {
@@ -189,6 +190,8 @@ class User extends \app\models\base\User implements \yii\web\IdentityInterface
         return false;
     }
 
+
+
     /**
      * Validates password
      *
@@ -198,6 +201,25 @@ class User extends \app\models\base\User implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->getSecurity()->validatePassword($password, $this->password);
+    }
+
+    public static function validateUser($username, $password){
+
+        $user = self::findByUsername($username);
+
+        if(!$username or !$password)
+
+            throw new HttpException( "There is an error!" );
+
+        if ($user->validatePassword($password)) 
+
+            return $user;
+
+        else
+
+            throw new HttpException( "Wrong username or password!" );
+
+
     }
 
     public function getRoleName()

@@ -14,7 +14,7 @@
                 <label for="username" class="sr-only">Username</label>
 
                 <div class="relative">
-                    <input v-model="usernameValue" type="usernameValue"
+                    <input v-model="username" type="username"
                         class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
                         placeholder="Enter username" />
                     <span class="absolute inset-y-0 right-0 grid place-content-center px-4">
@@ -26,7 +26,7 @@
                 <label for="password" class="sr-only">Password</label>
 
                 <div class="relative">
-                    <input v-model="passwordValue" 
+                    <input v-model="password" 
                         class="w-full rounded-lg border-gray-200 p-4 pr-12 text-sm shadow-sm"
                         placeholder="Enter password" />
                     <!-- {{ login.password }} -->
@@ -59,14 +59,14 @@ import LoginServices from '../services/LoginServices'
 function login() {
     const LoginUser = new LoginServices();
 
-    LoginUser.login(usernameValue.value, passwordValue.value).then(response => {
+    LoginUser.login(username.value, password.value).then(response => {
 
     });
 
 }
 
-const usernameValue = ref()
-const passwordValue = ref()
+const username = ref()
+const password = ref()
 const mobileFiltersOpen = ref(false)
 
 onMounted(() => {

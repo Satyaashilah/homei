@@ -14,6 +14,7 @@ use app\models\User;
 use app\models\LoginForm;
 use app\models\RegisterForm;
 
+
 class AuthController extends \yii\rest\ActiveController
 {
     use \app\traits\MessageTrait;
@@ -32,12 +33,12 @@ class AuthController extends \yii\rest\ActiveController
             'corsFilter'  => [
                 'class' => \yii\filters\Cors::className(),
                 'cors'  => [
-                    'Origin'                           => ['http://localhost:5173', ],
+                    'Origin'                           => ['http://localhost:5173',],
                     'Access-Control-Request-Method'    => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                     'Access-Control-Allow-Credentials' => true,
                     'Access-Control-Max-Age'           => 3600,                 // Cache (seconds)
                     'Access-Control-Allow-Origin'      => ['*'],
-                    // 'Access-Control-Request-Headers' => ['*'],
+                    'Access-Control-Request-Headers' => ['*'],
                     'Access-Control-Expose-Headers' => [],
                 ],
             ],
@@ -55,7 +56,7 @@ class AuthController extends \yii\rest\ActiveController
             'rateLimiter' => [
                 'class' => \yii\filters\RateLimiter::className(),
             ],
-            'authentication' => [
+            'authenticator' => [
                 'class' => \app\components\CustomAuth::class,
                 'except' => ['login', 'register'],
             ],
@@ -163,18 +164,50 @@ class AuthController extends \yii\rest\ActiveController
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
+        $params = Yii::$app->request->post();
+        if (empty($params['username']) || empty($params['password'])) return [
+            // 'status' => Status::STATUS_BAD_REQUEST,
+            'message' => "Need username and password.",
+            'data' => ''
+        ];
+
+        // $user = User::findByUsername($_POST['username']);
+
+        // if ($user->validatePassword($_POST['password'])) {
+            
+        //     $user->scenario = $user::SCENARIO_UPDATE;
+        //     $generate_random_string = (new \app\helpers\SsoTokenHelper)->generateToken();
+        //     $user->secret_token = $generate_random_string;
+        //     $user->fcm_token = $_POST['fcm_token'];
+        //     $user->validate();
+        //     $user->save();
+
+        //     $token = $generate_random_string;
+
+        //     return (object) [
+        //         "success" => true,
+        //         "message" => Yii::t("action_message", "Login Berhasil"),
+        //         "token" => $token,
+        //     ];
+        // } else {
+        //     return [
+        //         'message' => 'Username and Password not found. Check Again!',
+        //         'data' => ''
+        //     ];
+        // }
+
         try {
-            $user = \app\models\User::findByUsername($_POST['username']);
+            $user = \app\models\User::findByUsername($params['username']);
+            // $valid = \app\models\User::validateUser('username', 'password');  
             // var_dump($user);die;
 
             if (isset($user)) :
-                if (\Yii::$app->security->validatePassword($_POST['password'], $user->password) == false)
+                if (\Yii::$app->security->validatePassword($params['password'], $user->password) == false)
                     throw new HttpException(400, Yii::t("action_message", "Password Salah"));
-
                 $user->scenario = $user::SCENARIO_UPDATE;
                 $generate_random_string = (new \app\helpers\SsoTokenHelper)->generateToken();
                 $user->secret_token = $generate_random_string;
-                $user->fcm_token = $_POST['fcm_token'];
+                $user->fcm_token = $params['fcm_token'];
                 $user->validate();
                 $user->save();
                 // var_dump($user);die;
@@ -250,10 +283,9 @@ class AuthController extends \yii\rest\ActiveController
     {
         $headers = Yii::$app->request->headers;
         $accept = $headers->get('Authorization');
-        $model = User::find()->where(['secret_token'=>$accept])->one();
+        $model = User::find()->where(['secret_token' => $accept])->one();
         // var_dump($model);
-        if(!empty($model))
-        {
+        if (!empty($model)) {
             $model->secret_token = null;
             $model->save();
             // \Yii::$app->user->logout(false);
@@ -261,9 +293,9 @@ class AuthController extends \yii\rest\ActiveController
             return [
                 'success' => true,
                 'message' => 'Berhasil Logout',
-    
+
             ];
-        }else {
+        } else {
             return [
                 "success" => false,
                 "message" => "Gagal Logout"

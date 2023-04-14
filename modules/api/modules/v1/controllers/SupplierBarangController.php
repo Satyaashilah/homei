@@ -95,9 +95,7 @@ class SupplierBarangController extends \app\modules\api\controllers\BaseControll
             'gambar',
             'deskripsi'
         ]);
-        // kalo tanda q dihapus barang yang tampil jadi cuma sedikit, tapi kalo ga di hapus nanti fitur search nya ga fungsi alias nampilin seluruh data tanpa filter
-        // if ($search = $search->andWhere(['like', 'nama_barang', $nama_barang])) {
-        // }$search->all();
+       
 
         if ($search = Yii::$app->request->get('nama_barang')) {
             $query->Where(
